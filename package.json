@@ -18,7 +18,10 @@
     "@angular/platform-browser": "^18.0.0",
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
+    "@lookingglass/webxr": "^0.4.0",
+    "@lumaai/luma-web": "^0.2.2",
     "rxjs": "~7.8.0",
+    "three": "^0.157.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },

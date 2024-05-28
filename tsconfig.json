@@ -13,7 +13,7 @@
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "Node",
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
@@ -21,6 +21,10 @@
     "lib": [
       "ES2022",
       "dom"
+    ],
+    "typeRoots": [
+      "node_modules/@types",
+      "node_modules/@lookingglass/webxr/dist/"
     ]
   },
   "angularCompilerOptions": {
