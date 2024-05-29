@@ -1,1 +1,2 @@
-<luma-canvas></luma-canvas>
+<input #splatUrl type="text" (blur)="lumaCanvas.loadSplat(splatUrl.value)" />
+<luma-canvas #lumaCanvas></luma-canvas>

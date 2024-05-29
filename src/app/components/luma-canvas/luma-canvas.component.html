@@ -1,1 +1,3 @@
 <canvas #lumaCanvas class="luma-canvas"></canvas>
+<input type="range" min="-2" max="2" [(ngModel)]="targetZ" (ngModelChange)="onTargetZChange($event)" step="0.01" class="slider">
+<p>{{ targetZ }}</p>
