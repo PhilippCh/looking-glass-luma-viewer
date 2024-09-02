@@ -1,11 +1,10 @@
-import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {PerspectiveCamera, Plane, PlaneHelper, Scene, Vector3, WebGLRenderer} from 'three';
+import {AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {PerspectiveCamera, Scene, WebGLRenderer} from 'three';
 import {LumaSplatsThree} from '@lumaai/luma-web';
 import {LookingGlassWebXrService} from "../../services/looking-glass-web-xr.service";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {VRButton} from "three/examples/jsm/webxr/VRButton";
 import {FormsModule} from "@angular/forms";
-import {ThreeMFLoader} from "three/examples/jsm/loaders/3MFLoader";
 
 @Component({
     selector: 'luma-canvas',
@@ -21,6 +20,9 @@ export class LumaCanvasComponent implements AfterViewInit, OnChanges {
     @Input()
     public showFocusPlane = true;
 
+    @Input()
+    public splatUrl = '';
+
     @ViewChild('lumaCanvas')
     public lumaCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -28,7 +30,6 @@ export class LumaCanvasComponent implements AfterViewInit, OnChanges {
 
     private _scene = new Scene();
     private _splat?: LumaSplatsThree;
-    private _focusPlane = this.createFocusPlane();
 
     constructor(private webXrService: LookingGlassWebXrService) {
     }
@@ -36,11 +37,18 @@ export class LumaCanvasComponent implements AfterViewInit, OnChanges {
     public ngAfterViewInit() {
         this.webXrService.createPolyfill();
         this.createRenderer();
+        this.addKeyboardListeners();
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['showFocusPlane']) {
             this.onShowFocusPlane(this.showFocusPlane);
+        }
+
+        //console.log(changes);
+
+        if (changes['splatUrl']) {
+            this.loadSplat(this.splatUrl);
         }
     }
 
@@ -80,6 +88,7 @@ export class LumaCanvasComponent implements AfterViewInit, OnChanges {
 
         const controls = new OrbitControls(camera, this.lumaCanvas.nativeElement);
         controls.enableDamping = true;
+        controls.enableZoom = true;
 
         renderer.setAnimationLoop(() => {
             controls.update();
@@ -87,14 +96,38 @@ export class LumaCanvasComponent implements AfterViewInit, OnChanges {
         });
     }
 
-    private createFocusPlane(): PlaneHelper {
-        const plane = new Plane(new Vector3(1, 1, 0.2), 3);
-        return new PlaneHelper(plane, 1, 0xffff00);
-    }
-
     private onShowFocusPlane(enabled: boolean) {
         if (enabled) {
 
         }
+    }
+
+    private addKeyboardListeners() {
+        window.addEventListener('keydown', (event) => {
+            let handled = false;
+            if (event.key === 'ArrowUp') {
+                this._splat!.position.y += 0.1;
+                handled = true;
+            } else if (event.key === 'ArrowDown') {
+                this._splat!.position.y -= 0.1;
+                handled = true;
+            } else if (event.key === 'ArrowLeft') {
+                this._splat!.position.z += 0.1;
+                handled = true;
+            } else if (event.key === 'ArrowRight') {
+                this._splat!.position.z -= 0.1;
+                handled = true;
+            } else if (event.key === 'a') {
+                this._splat!.position.x += 0.1;
+                handled = true;
+            } else if (event.key === 'd') {
+                this._splat!.position.x -= 0.1;
+                handled = true;
+            }
+
+            if (handled) {
+                event.preventDefault();
+            }
+        });
     }
 }
